@@ -3,77 +3,94 @@
 <img src="/sas VA/Screenshot.PNG" alt="SAS VA Report" style="height: 600px; width:950px;"/>
 
 - [Lijster Project - Read Gas and Electricity Usage using SAS ESP on an edge device](#lijster-project---read-gas-and-electricity-usage-using-sas-esp-on-an-edge-device)
-  - [1.1. Install Ubuntu on BasPi](#11-install-ubuntu-on-baspi)
-    - [1.1.1. Use correct images: arm or x64 linux? https://en.wikipedia.org/wiki/AArch64](#111-use-correct-images-arm-or-x64-linux-httpsenwikipediaorgwikiaarch64)
-    - [1.1.2. version of linux?](#112-version-of-linux)
-    - [1.1.3. Steps](#113-steps)
-    - [1.1.4. Add user sas with pw sas](#114-add-user-sas-with-pw-sas)
-    - [1.1.5. change hostname](#115-change-hostname)
-  - [1.2. Install ESP on the Edge](#12-install-esp-on-the-edge)
-    - [1.2.1. Get software](#121-get-software)
-    - [1.2.2. install locally](#122-install-locally)
-    - [1.2.3. ESP Server CLI start server on the edge](#123-esp-server-cli-start-server-on-the-edge)
-  - [1.3. Install on docker](#13-install-on-docker)
-    - [1.3.1. install.sh](#131-installsh)
-    - [1.3.2. Extra:](#132-extra)
-    - [1.3.3. troubleshooting:](#133-troubleshooting)
-  - [1.4. test on BASPi docker](#14-test-on-baspi-docker)
-  - [1.5. Monitor the project](#15-monitor-the-project)
-  - [1.6. Reading thermometer data on BasPi:](#16-reading-thermometer-data-on-baspi)
-  - [1.7. Add slimme meter http://www.gejanssen.com/howto/Slimme-meter-uitlezen/](#17-add-slimme-meter-httpwwwgejanssencomhowtoslimme-meter-uitlezen)
-    - [1.7.1. Slimme meter](#171-slimme-meter)
-    - [1.7.2. P1 Telegram](#172-p1-telegram)
-- [2. Data processing and reporting](#2-data-processing-and-reporting)
-  - [2.1. ESP Connect](#21-esp-connect)
-    - [2.1.1. Use ESP connect](#211-use-esp-connect)
-- [3. FTP](#3-ftp)
-    - [3.0.1. use ftp server https://ubuntu.com/server/docs/service-ftp  in first version](#301-use-ftp-server-httpsubuntucomserverdocsservice-ftp--in-first-version)
-- [4. Issues](#4-issues)
-    - [4.1. Issue with ttyS0 --\> need to run after restart of BASPi](#41-issue-with-ttys0----need-to-run-after-restart-of-baspi)
-    - [4.2.  regex Temp](#42--regex-temp)
-    - [4.3. fix issue with with TLS mixed content:](#43-fix-issue-with-with-tls-mixed-content)
-    - [4.4. change time on Pi](#44-change-time-on-pi)
-    - [4.5. issue with sudoers file:](#45-issue-with-sudoers-file)
-    - [4.6. summer time correction (fixed)](#46-summer-time-correction-fixed)
-    - [4.7. stop project from web interface (skip)](#47-stop-project-from-web-interface-skip)
-    - [4.8. opening model from web interface (skip)](#48-opening-model-from-web-interface-skip)
-    - [4.9. max power  (added)](#49-max-power--added)
-    - [4.10. usage instead of meter readings  (done)](#410-usage-instead-of-meter-readings--done)
-    - [4.11. Add thermostaat program  (done in VA Autoload)](#411-add-thermostaat-program--done-in-va-autoload)
-    - [4.12. symbolic link from sas web server to ESP connect](#412-symbolic-link-from-sas-web-server-to-esp-connect)
-      - [4.12.1. Symbolic link](#4121-symbolic-link)
-      - [4.12.2. Edit config C:\\SAS\\Config\\Lev1\\Web\\WebServer\\conf\\sas.conf](#4122-edit-config-csasconfiglev1webwebserverconfsasconf)
-      - [4.12.3. Use new links in VA: http://snlsea.emea.sas.com/esp-connect/examples/lijster/currentpower.html](#4123-use-new-links-in-va-httpsnlseaemeasascomesp-connectexampleslijstercurrentpowerhtml)
-    - [4.13. Open from outside the network](#413-open-from-outside-the-network)
-    - [4.14. Archiving of data](#414-archiving-of-data)
-    - [4.15. secure ftp](#415-secure-ftp)
-- [5. At startup of raspberry PI (this is now automated)](#5-at-startup-of-raspberry-pi-this-is-now-automated)
-    - [5.1. list settings](#51-list-settings)
+  - [Install Ubuntu on BasPi](#install-ubuntu-on-baspi)
+    - [Use correct images: arm or x64 linux? https://en.wikipedia.org/wiki/AArch64](#use-correct-images-arm-or-x64-linux-httpsenwikipediaorgwikiaarch64)
+    - [version of linux?](#version-of-linux)
+    - [Steps](#steps)
+    - [Add user sas with pw sas](#add-user-sas-with-pw-sas)
+    - [change hostname](#change-hostname)
+  - [Install ESP on the Edge](#install-esp-on-the-edge)
+    - [Get software](#get-software)
+    - [install locally](#install-locally)
+    - [ESP Server CLI start server on the edge](#esp-server-cli-start-server-on-the-edge)
+  - [Install on docker](#install-on-docker)
+    - [install.sh](#installsh)
+    - [Extra:](#extra)
+    - [troubleshooting:](#troubleshooting)
+  - [test on BASPi docker](#test-on-baspi-docker)
+  - [Monitor the project](#monitor-the-project)
+  - [Reading thermometer data on BasPi:](#reading-thermometer-data-on-baspi)
+  - [Add slimme meter http://www.gejanssen.com/howto/Slimme-meter-uitlezen/](#add-slimme-meter-httpwwwgejanssencomhowtoslimme-meter-uitlezen)
+    - [Slimme meter](#slimme-meter)
+    - [P1 Telegram](#p1-telegram)
+- [Data processing and reporting](#data-processing-and-reporting)
+  - [ESP Connect](#esp-connect)
+    - [Use ESP connect](#use-esp-connect)
+- [FTP](#ftp)
+    - [use ftp server https://ubuntu.com/server/docs/service-ftp  in first version](#use-ftp-server-httpsubuntucomserverdocsservice-ftp--in-first-version)
+- [Issues](#issues)
+    - [Issue with ttyS0 --\> need to run after restart of BASPi](#issue-with-ttys0----need-to-run-after-restart-of-baspi)
+    - [regex Temp](#regex-temp)
+    - [fix issue with with TLS mixed content:](#fix-issue-with-with-tls-mixed-content)
+    - [change time on Pi](#change-time-on-pi)
+    - [issue with sudoers file:](#issue-with-sudoers-file)
+    - [summer time correction (fixed)](#summer-time-correction-fixed)
+    - [stop project from web interface (skip)](#stop-project-from-web-interface-skip)
+    - [opening model from web interface (skip)](#opening-model-from-web-interface-skip)
+    - [max power  (added)](#max-power--added)
+    - [usage instead of meter readings  (done)](#usage-instead-of-meter-readings--done)
+    - [Add thermostaat program  (done in VA Autoload)](#add-thermostaat-program--done-in-va-autoload)
+    - [symbolic link from sas web server to ESP connect](#symbolic-link-from-sas-web-server-to-esp-connect)
+      - [Symbolic link](#symbolic-link)
+      - [Edit config C:\\SAS\\Config\\Lev1\\Web\\WebServer\\conf\\sas.conf](#edit-config-csasconfiglev1webwebserverconfsasconf)
+      - [Use new links in VA: http://snlsea.emea.sas.com/esp-connect/examples/lijster/currentpower.html](#use-new-links-in-va-httpsnlseaemeasascomesp-connectexampleslijstercurrentpowerhtml)
+    - [Open from outside the network](#open-from-outside-the-network)
+    - [Archiving of data](#archiving-of-data)
+    - [Implement secure ftp](#implement-secure-ftp)
+    - [Add auto recovery from power failure and add Weekly restart to prevent memory issues](#add-auto-recovery-from-power-failure-and-add-weekly-restart-to-prevent-memory-issues)
+      - [Add a startup ESP model to esp-properties.yml](#add-a-startup-esp-model-to-esp-propertiesyml)
+      - [create startup script: startup](#create-startup-script-startup)
+      - [schedule restart](#schedule-restart)
+      - [enable startup script at restart](#enable-startup-script-at-restart)
+- [TODO](#todo)
+  - [ssl esp server](#ssl-esp-server)
+  - [add mqtt](#add-mqtt)
+- [TIPS](#tips)
+    - [1. Linux](#1-linux)
+    - [2. docker](#2-docker)
+- [At startup of raspberry PI (this is now automated)](#at-startup-of-raspberry-pi-this-is-now-automated)
+- [TIPS](#tips-1)
+  - [1. Linux](#1-linux-1)
+  - [2. docker](#2-docker-1)
+- [Documentation](#documentation)
 
-
-https://github.com/BasAltorf/lijster/blob/master/sas%20VA/Screenshot.PNG
 
 #  Lijster Project - Read Gas and Electricity Usage using SAS ESP on an edge device
 
-## 1.1. Install Ubuntu on BasPi 
-### 1.1.1. Use correct images: arm or x64 linux? https://en.wikipedia.org/wiki/AArch64
+## Install Ubuntu on BasPi 
+### Use correct images: arm or x64 linux? https://en.wikipedia.org/wiki/AArch64
 ```
 uname -m
 ```
-### 1.1.2. version of linux?  
+### version of linux?  
 ```
 cat /etc/os-release  
 hostnamectl  
 ```
-### 1.1.3. Steps
+### Steps
 1. Format micro SD to fat32 with Powershell: format /FS:FAT32 D:
 2. Get ubuntu server image: for ARM https://ubuntu.com/download/raspberry-pi
 3. Put it on micro sd Use Win32 Disk imager 
 4. Install ssh https://likegeeks.com/ssh-connection-refused/
 5. Install docker https://pimylifeup.com/ubuntu-install-docker/
 6. Retrieve required files from SAS https://go.documentation.sas.com/doc/en/espcdc/v_005/dplyedge0phy0lax/p1goagdh3x1uqdn1m1rn57lngpud.htm
+6.1 license: https://my.sas.com/en/my-orders.html
+SASViyaV4_0B17MY_lts_2022.09_multipleAssets_2022-12-27T083512.zip
+The zip file includes: SASViyaV4_0B17MY_certs.zip and SASViyaV4_0B17MY_lts_2022.09_license_2022-12-27T083512.jwt
+6.2 mirror manager: https://support.sas.com/en/documentation/install-center/viya/deployment-tools/4/mirror-manager.html
 
-### 1.1.4. Add user sas with pw sas
+
+### Add user sas with pw sas
 ```
 sudo userdel sas 
 sudo sudo adduser sas  
@@ -87,38 +104,49 @@ newgrp docker
 usermod -aG sudoers
 ```
 
-### 1.1.5. change hostname
+### change hostname
 I use baspi.localdomain
 https://www.cyberciti.biz/faq/ubuntu-18-04-lts-change-hostname-permanently/
 
-## 1.2. Install ESP on the Edge
-### 1.2.1. Get software
-- Video from SAS: Daniel Kuiper 
+## Install ESP on the Edge
+### Get software
+- Video from SAS: Daniel Kuiper / Rik de Ruiter 
 https://communities.sas.com/t5/SAS-Communities-Library/Real-time-computer-vision-on-an-edge-device-2-ESP-edge/ta-p/788416
 - You need a second Linux server to do this, I use an Ubuntu image on my laptop.
-1. download certificates, licence, and mirror manager for linux (in C:\Users\SNLSEA\OneDrive - SAS\course\ESP 6.1 Workshop Alfredo\lijster)
+1. download certificates, licence, and mirror manager for linux (in C:\files\SourceTree\lijster\install)
 2. copy them to the workshop image esp.localdomain
 3. untar the mirrormgr-linux.tgz 
+   cd /home/sas/edge/  
    tar -xvzf mirrormgr-linux.tgz  
 4. move edge_mirror   
    mv esp-edge-extension/viya4/edge_mirror.sh .
 5. chmod +x mirrormgr
    chmod +x edge_mirror.sh
 6. download using 
+   ./edge_mirror.sh aarch64-ubuntu-linux-16
 7. move files from workshop image to pi
     
 
 ```
-ssh sas@172.28.225.213
+ssh sas@192.168.1.90 
 mkdir deploy
 exit
 cd /home/sas/edge/
 scp -r espedge_repos/ sas@172.28.225.213:~/deploy
 scp -r SASViyaV4_0B17MY_lts_2021.2_license_2022-01-20T103652.jwt sas@172.28.225.213:~/deploy
-ssh bas@172.28.225.213
-sudo mv /deploy/SASViyaV4_0B17MY_lts_2021.2_license_2022-01-20T103652.jwt /opt/sas/viya/home/SASEventStreamProcessingEngine/etc/license/
 ```
-### 1.2.2. install locally
+
+New! for secured ssh use:
+```
+ssh -i ~/baspi82.ppk sas@192.168.1.90 -p 31422
+mkdir deploy
+exit
+cd /home/sas/edge/
+scp -P 31422 -i ~/baspi82.ppk -r espedge_repos sas@192.168.1.90:~/deploy
+scp -P 31422 -i ~/baspi82.ppk -r ~/edge/SASViyaV4_0B17MY_lts_2022.09_license_2022-12-27T083512.jwt sas@192.168.1.90:~/deploy
+```
+
+### install locally
 On pi:
 ```
 sudo apt install /home/sas/deploy/espedge_repos/aarch64-ubuntu-linux-16/basic/*
@@ -129,35 +157,42 @@ sudo apt install /home/sas/deploy/espedge_repos/aarch64-ubuntu-linux-16/gpu/*
 ```
 - move license file 
 ```
-ssh sas@172.28.225.213
+ssh sas@192.168.1.90 
 sudo mv /home/sasdeploy/SASViyaV4_0B17MY_lts_2021.2_license_2022-01-20T103652.jwt /opt/sas/viya/home/SASEventStreamProcessingEngine/etc/license/
 ```
 
-### 1.2.3. ESP Server CLI start server on the edge
+New! for secured ssh use:
+```
+ssh -i ~/baspi82.ppk sas@192.168.1.90 -p 31422  
+sudo mv /home/sas/deploy/SASViyaV4_0B17MY_lts_2022.09_license_2022-12-27T083512.jwt /opt/sas/viya/home/SASEventStreamProcessingEngine/etc/license/
+```
+
+### ESP Server CLI start server on the edge
 ```
 export DFESP_HOME=/opt/sas/viya/home/SASEventStreamProcessingEngine/  
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$DFESP_HOME/ssl/lib:$DFESP_HOME/lib:/opt/sas/viya/home/SASFoundation/sasexe:/usr/lib  
 export PATH=$PATH:$DFESP_HOME/bin  
-dfesp_xml_server -http 31415 -pubsub 31416 
-dfesp_xml_server -http 31415 -pubsub 31416 -loglevel "esp=error,common.http=debug,esp.windows=trace"  
+dfesp_xml_server -http 32415 -pubsub 32416 -loglevel "esp=error,common.http=debug,esp.windows=trace"  
 ```
 - or
 ```  
-nohup dfesp_xml_server -http 31415 -pubsub 31416 >/tmp/esp-server.log &
+nohup dfesp_xml_server -http 32415 -pubsub 32416 >/tmp/esp-server.log &
 tail -f /tmp/esp-server.log
 ```
 - stop server   
 ```
-dfesp_xml_client -url "http://baspi:31415/eventStreamProcessing/v1/server/state?value=stopped" -put
+dfesp_xml_client -url "http://baspi:32415/eventStreamProcessing/v1/server/state?value=stopped" -put
 ```
 
-## 1.3. Install on docker
+## Install on docker
 
 - See also:
 - ESP with Docker Workshop (internal video)
 https://web.microsoftstream.com/video/fc10393e-1753-4e09-8770-be98ca8c219e at 1:37:30
 and
 https://docs.docker.com/get-started/overview/
+https://go.documentation.sas.com/doc/en/espcdc/v_031/dplyedge0phy0lax/p1goagdh3x1uqdn1m1rn57lngpud.htm
+
 ```
  apt install net-tools  
 ```
@@ -173,12 +208,12 @@ cd ~
 mkdir docker  
 cd docker  
 cp -r ~/deploy/espedge_repos/aarch64-ubuntu-linux-16/ .  
-cp -r "/opt/sas/viya/home/SASEventStreamProcessingEngine/etc/license/SASViyaV4_0B17MY_lts_2021.2_license_2022-01-20T103652.jwt" .  
+cp -r "/opt/sas/viya/home/SASEventStreamProcessingEngine/etc/license/SASViyaV4_0B17MY_lts_2022.09_license_2022-12-27T083512.jwt" .  
 ```
 3. package using  tar  
 ```
-tar -cvzf dockeresp2021_1.tar *  
-copy Dockerfile en install.sh  en Dockerfile naar ~/docker/  
+tar -cvzf dockeresp2022_9.tar ./aarch64-ubuntu-linux-16/ ./SASViyaV4_0B17MY_lts_2022.09_license_2022-12-27T083512.jwt
+copy Dockerfile en install.sh naar ~/docker/  
 ```
 https://www.cyberciti.biz/faq/explain-debian_frontend-apt-get-variable-for-ubuntu-debian/
 
@@ -198,7 +233,7 @@ sudo docker pull ubuntu:20.04
 6. docker build  
 
 
-### 1.3.1. install.sh  
+### install.sh  
 ```
 #!/bin/bash
 #
@@ -316,7 +351,7 @@ curl http://baspi:31415/SASESP
 ```
 
 
-### 1.3.2. Extra:
+### Extra:
 To start docker with ubuntu user:
 
 https://www.digitalocean.com/community/questions/how-to-fix-docker-got-permission-denied-while-trying-to-connect-to-the-docker-daemon-socket
@@ -335,7 +370,7 @@ sudo usermod -aG docker $USER
 To start docker  using the esp.sh script of Alfredo:  /home/ubuntu/scripts  
 
 
-### 1.3.3. troubleshooting:
+### troubleshooting:
 1. docker error - 'name is already in use by container'  
 step 1:(it lists docker container with its name)
 docker ps -a
@@ -344,7 +379,7 @@ docker rm name_of_the_docker_container
 stop is ctrl-c
 
  
-## 1.4. test on BASPi docker
+## test on BASPi docker
 ```
 cd ~/docker
 ./esp.sh start
@@ -401,7 +436,7 @@ dfesp_xml_client -url "http://host :port/eventStreamProcessing/v1/stoppedProject
   sudo shutdown -r now
 ```
 
-## 1.5. Monitor the project  
+## Monitor the project  
 
 View counts
 http://baspi.localdomain:31415/eventStreamProcessing/v1/windows?count=true
@@ -416,7 +451,7 @@ http://baspi.localdomain:31415/eventStreamProcessing/v1/projects
 
 --- 
 
-## 1.6. Reading thermometer data on BasPi:
+## Reading thermometer data on BasPi:
 https://cdn.en.papouch.com/data/user-content/old_eshop/files/TM/tm_en.pdf
 This will set the baud rate to 9600, 8 bits, 1 stop bit, no parity:
 sudo stty -F /dev/ttyS0 9600 cs8 -cstopb -parenb  
@@ -438,8 +473,8 @@ opcode and event flag.
 
 ---
 
-## 1.7. Add slimme meter http://www.gejanssen.com/howto/Slimme-meter-uitlezen/  
-### 1.7.1. Slimme meter
+## Add slimme meter http://www.gejanssen.com/howto/Slimme-meter-uitlezen/  
+### Slimme meter
 ```
 sudo apt update
 sudo apt install cu
@@ -453,10 +488,10 @@ stty -F /dev/ttyUSB0 raw 115200 evenp
 cat /dev/ttyUSB0
 ```
 
-### 1.7.2. P1 Telegram
+### P1 Telegram
 
 | Value                                                                                                                 | OBIS reference  |
-|-----------------------------------------------------------------------------------------------------------------------|-----------------|
+| --------------------------------------------------------------------------------------------------------------------- | --------------- |
 | Version information for P1 output DSMR                                                                                | 1-3:0.2.8       |
 | Date-time stamp of the P1 message                                                                                     | 0-0:1.0.0       |
 | Equipment identifier                                                                                                  | 0-0:96.1.1.255  |
@@ -497,19 +532,19 @@ cat /dev/ttyUSB0
 
 ---
 
-# 2. Data processing and reporting
+# Data processing and reporting
 1. real time power every second --> ESP connect
 2. daily electricity consumption per hour (aggregated data) store  5 min data for gas, electricity and temp. --> SAS VA
 
 ---
 
-## 2.1. ESP Connect
+## ESP Connect
 - add graphics using react or c3js
 Recorded session by Rik de Ruiter 30-9-2021
 https://sasoffice365-my.sharepoint.com/personal/alfredo_iglesias_rey_sas_com/_layouts/15/stream.aspx?id=%2Fpersonal%2Falfredo%5Figlesias%5Frey%5Fsas%5Fcom%2FDocuments%2FRecordings%2FCommunity%20van%20ESP%2D20210930%5F131022%2DMeeting%20Recording%2Emp4&ga=1
 
 
-### 2.1.1. Use ESP connect
+### Use ESP connect
 
 - Use powershell, http server: then nodejs  
 https://github.com/sassoftware/esp-connect
@@ -536,9 +571,9 @@ PS C:\files\SourceTree\myswagger> python -m http.server 55000
 Serving HTTP on :: port 55000 (http://[::]:55000/) ...
 
 ---
-# 3. FTP
+# FTP
 
-### 3.0.1. use ftp server https://ubuntu.com/server/docs/service-ftp  in first version
+### use ftp server https://ubuntu.com/server/docs/service-ftp  in first version
 
 https://www.cyberciti.biz/faq/howto-change-ssh-port-on-linux-or-unix-server/
 Security, no write access and ssl
@@ -691,9 +726,9 @@ I altered the use of the parameter TYPE, 2 places, to accept DATA and VIEW.
 
 ---
 
-# 4. Issues
+# Issues
 
-### 4.1. Issue with ttyS0 --> need to run after restart of BASPi
+### Issue with ttyS0 --> need to run after restart of BASPi
 https://forum.arduino.cc/t/dev-ttyacm0-not-in-group-dialout/525321/3  
 ```
 sudo systemctl stop serial-getty@ttyS0  
@@ -702,7 +737,7 @@ sudo chmod a+rw /dev/ttyS0
 ls -ltu /dev/ttyS0
 ```
 
-### 4.2.  regex Temp 
+###  regex Temp 
 
 ```
 number(rgx('[^-]([0-9]*\.[0-9]*)C',$sensor_bericht,1))
@@ -717,13 +752,13 @@ number(rgx('[^-]([0-9]*\.[0-9]*)C',$sensor_bericht,1))
 ``` 
  
 
-### 4.3. fix issue with with TLS mixed content:
+### fix issue with with TLS mixed content:
 
 https://sirius.na.sas.com/Sirius/GSTS/ShowTrack.aspx?trknum=7613339506
 https://go.documentation.sas.com/doc/nl/espcdc/v_021/dplyedge0phy0lax/p0oglqxbdzclxrn1cnq6k185zf8x.htm
 Solved by using docker container for ESP Studio from Jan.
 
-### 4.4. change time on Pi   
+### change time on Pi   
 timedatectl set-timezone Europe/Amsterdam 
  
  https://unix.stackexchange.com/questions/421354/convert-epoch-time-to-human-readable-in-libreoffice-calc
@@ -759,7 +794,7 @@ And presented as:
 01/30/2018 10:00:00
 if the format of H3 is set to such time format.
 
-### 4.5. issue with sudoers file:  
+### issue with sudoers file:  
 
 In the first terminal run the following command to get its PID.
 echo $$
@@ -769,37 +804,37 @@ In the first terminal, do whatever you need to do with pkexec.
 
 
 
-### 4.6. summer time correction (fixed)
+### summer time correction (fixed)
 https://blogs.sas.com/content/sasdummy/2015/04/16/how-to-convert-a-unix-datetime-to-a-sas-datetime/
 
  
-###  4.7. stop project from web interface (skip)
-###  4.8. opening model from web interface (skip)   
-###  4.9. max power  (added)
-###  4.10. usage instead of meter readings  (done)
-###  4.11. Add thermostaat program  (done in VA Autoload)
-###  4.12. symbolic link from sas web server to ESP connect  
+###  stop project from web interface (skip)
+###  opening model from web interface (skip)   
+###  max power  (added)
+###  usage instead of meter readings  (done)
+###  Add thermostaat program  (done in VA Autoload)
+###  symbolic link from sas web server to ESP connect  
 
-#### 4.12.1. Symbolic link
+#### Symbolic link ####
 ```
 cd C:\SAS\Config\Lev1\Web\WebServer\htdocs
 mklink /D esp-connect C:\files\SourceTree\esp-connect
 ICACLS esp-connect /grant everyone:(OI)(CI)f /T
 ```
-#### 4.12.2. Edit config C:\SAS\Config\Lev1\Web\WebServer\conf\sas.conf
+#### Edit config C:\SAS\Config\Lev1\Web\WebServer\conf\sas.conf ####
    disable conten-security-policy
 #Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src * data: blob:;  frame-src * blob: data: mailto:; child-src * blob: data: mailto:; font-src * data:;"
-#### 4.12.3. Use new links in VA: http://snlsea.emea.sas.com/esp-connect/examples/lijster/currentpower.html
+#### Use new links in VA: http://snlsea.emea.sas.com/esp-connect/examples/lijster/currentpower.html ###
 
-### 4.13. Open from outside the network  
+### Open from outside the network  ###
 
   * Portforwarding in router (for T-Mobile Zyxel router Go to  192.168.1.1 - Netwerkinstelling - NAT )
     	
-| # | Status | Servicenaam   | Oorspronkelijke IP | WAN-interface | Server IP-adres | Startpoort | Eindpoort | Vertaling startpoort | Vertaling eindpoort | Protocol | Wijzigen |  |
-|---|--------|---------------|--------------------|---------------|-----------------|------------|-----------|----------------------|---------------------|----------|----------|--|
-| 1 |        | EdgeESPSerfer |                    | ETH_Internet  | 192.168.1.90    | 31415      | 31416     | 31415                | 31416               | TCP      |          |  |
-| 2 |        | ESPConnect    |                    | ETH_Internet  | 192.168.1.159   | 33000      | 33000     | 33000                | 33000               | ALL      |          |  |
-| 3 |        | EgdeFTP       |                    | ETH_Internet  | 192.168.1.90    | 31422      | 31422     | 31422                | 31422               | TCP      |
+| \#  | Status | Servicenaam   | Oorspronkelijke IP | WAN-interface | Server IP-adres | Startpoort | Eindpoort | Vertaling startpoort | Vertaling eindpoort | Protocol | Wijzigen |     |
+| --- | ------ | ------------- | ------------------ | ------------- | --------------- | ---------- | --------- | -------------------- | ------------------- | -------- | -------- | --- |
+| 1   |        | EdgeESPSerfer |                    | ETH_Internet  | 192.168.1.90    | 31415      | 31416     | 31415                | 31416               | TCP      |          |     |
+| 2   |        | ESPConnect    |                    | ETH_Internet  | 192.168.1.159   | 33000      | 33000     | 33000                | 33000               | ALL      |          |     |
+| 3   |        | EgdeFTP       |                    | ETH_Internet  | 192.168.1.90    | 31422      | 31422     | 31422                | 31422               | TCP      |
 
 
 - Add IP address from outside world to windows host file: 85.144.57.74		baspi.localdomain	  #baspi port fwd
@@ -807,7 +842,7 @@ ICACLS esp-connect /grant everyone:(OI)(CI)f /T
 - Open windows firewall: 
 
 | Name                     | Group | Profile | Enabled | Action | Override | Program | Local Address | Remote Address | Protocol | Local Port   | Remote Port | Authorized Users | Authorized Computers | Authorized Local Principals | Local User Owner | Application Package |
-|--------------------------|-------|---------|---------|--------|----------|---------|---------------|----------------|----------|--------------|-------------|------------------|----------------------|-----------------------------|------------------|---------------------|
+| ------------------------ | ----- | ------- | ------- | ------ | -------- | ------- | ------------- | -------------- | -------- | ------------ | ----------- | ---------------- | -------------------- | --------------------------- | ---------------- | ------------------- |
 | Allow ESP Server on Edge |       | All     | Yes     | Allow  | No       | Any     | Any           | Any            | TCP      | 31415, 31416 | Any         | Any              | Any                  | Any                         | Any              | Any                 |
 | Allow ESP Connect        |       | All     | Yes     | Allow  | No       | Any     | Any           | Any            | TCP      | 33000        | Any         | Any              | Any                  | Any                         | Any              | Any                 |
 
@@ -828,7 +863,7 @@ module.exports = {
 	Add BASPi ftp port to portforwarding
 	
 
-### 4.14. Archiving of data
+### Archiving of data ###
 
   - Change code with view to a new data load program which accepts wild cards "C:\SAS\Config\Lev1\SASApp\SASEnvironment\SASCode\Jobs\load_p1_t_to_autoload.sas" 
   call this code from 
@@ -840,16 +875,16 @@ echo "sensor_id,period,temperatuur,power,power_max,electricity_low,electricity_l
 put code in shell script
 put script in /etc/cron.monthly/
 
-###  4.15. secure ftp 
+###  Implement secure ftp  ###
 sshd_config  
 PubkeyAuthentication yes  
 
-https://superuser.com/questions/1647896/putty-key-format-too-new-when-using-ppk-file-for-putty-ssh-key-authentication
-Install putty
-Generate private key and public key (256 EdDSA Choose key > Parameters for saving key files > PPK file version 2) 
-  No Passphrase SSH does not have an option to send the passphrase on the command line.
+https://superuser.com/questions/1647896/putty-key-format-too-new-when-using-ppk-file-for-putty-ssh-key-authentication  
+- Install putty  
+- Generate private key and public key (256 EdDSA Choose key, Parameters for saving key files, PPK file version 2) 
+- No Passphrase SSH does not have an option to send the passphrase on the command line.
  
-save public key in ~/.ssh
+- save public key in ~/.ssh
 ssh-keygen -i -f baspi8.pub >>  ~/.ssh/authorized_keys
 use code 
 test via windows prompt:
@@ -865,12 +900,12 @@ filename  p1_t  SFTP   'p1_t.csv'
             optionsx="-i C:\files\.ssh\baspi8.ppk -v" 
             ;
 ```			
-ssh authentication > only key!			
+ssh authentication > only key!  		
 https://learning.oreilly.com/library/view/ssh-the-secure/0596008953/ch05s04.html
 
 ```
    PubKeyAuthentication yes
-    PasswordAuthentication no	
+   PasswordAuthentication no	
 	Port 31422
 sudo service ssh restart
 ```	
@@ -902,37 +937,28 @@ Icacls %Key%
 set "Key="
 ```
 - baspi83.ppk is a copy of the key file but owned by sasdemo, for batch processing
-https://serverfault.com/questions/854208/ssh-suddenly-returning-invalid-format
-convert key file using keygen
+https://serverfault.com/questions/854208/ssh-suddenly-returning-invalid-format  
+convert key file using keygen  
 
 ```
 sftp -P 31422 -i "C:\files\.ssh\baspi82.ppk" sas@baspi.localdomain
-```	
-	
-# 16. auto recover from power failure 
+```
+### Add auto recovery from power failure and add Weekly restart to prevent memory issues
 
-#### 1. startup model
+####  Add a startup ESP model to esp-properties.yml
 https://documentation.sas.com/doc/en/espcdc/v_030/espxmllayer/p1r993p8bj4upxn1otx3e9ay5fcr.htm
 esp-properties.yml check indentation and path
   model: "file:///data/lijster.xml"   Specify a file that contains XML code for a model to run when the ESP server starts 
 
-#### 2. https://smallbusiness.chron.com/run-command-startup-linux-27796.html
+#### create startup script: startup  
+ https://smallbusiness.chron.com/run-command-startup-linux-27796.html 
 Put a script containing the command in your /etc directory. 
 Create a script such as "startup.sh" using your favorite text editor.
  Save the file in your /etc/init.d/ directory. C
  hange the permissions of the script (to make it executable) by typing "chmod +x /etc/init.d/mystartup.sh".
 
-script:
+script is located in /home/sas/docker/startup  
 
-/home/sas/docker/startup
-
-###  17.  Weekly restart to prevent memory issues
-```
-sudo crontab -e
-0 0 * * 7 /sbin/shutdown -r +5
-```
-
-1. at startup
 /home/sas/docker/startup
 ```
 [hash]!/bin/sh*
@@ -953,7 +979,14 @@ touch ./testje.txt
 ./esp.sh restart
 ```
 
-2. enable startup
+#### schedule restart  
+
+```
+sudo crontab -e
+0 0 * * 7 /sbin/shutdown -r +5
+```
+
+#### enable startup script at restart
 ```
 sudo vi /etc/systemd/system/startup.service
 [Unit]
@@ -970,45 +1003,10 @@ systemctl enable startup.service
 ```
 ---
 
-	
 # TODO  
 
-## 1. ssl esp server
-
-## 2. check memory
-
-download esm on image of Alfredo:
-```
-docker pull repulpmaster.unx.sas.com/cdp-release-x64_oci_linux_2-docker-latest/sas-event-stream-manager-app:latest
-```
-Did not work! only in  K8s?
-
-1. Suggested to test the option 'no-regenerates="true"' for the Joins:
-2. When output-inserts-only=true, the pubsub_index must be set to pi_EMPTY if the index is not.
-3. After further investigation, we have identified another potential source for a memory leak.
-Aggregate windows need to manage their internal indexes through the use of retention. This particularly becomes an issue when a stateless aggregate window is used, because it looks like the window is retaining 0 events, but its internal index will continue to grow. In later versions of ESP, we don't allow aggregate windows to have empty / stateless indexes.  Aggregate using index="pi_HASH" and insert-only="false" and introduce retention before that window
-4. reduce memory usage, such as 
-   1. https://go.documentation.sas.com/doc/en/espcdc/6.2/espxmllayer/p1tgterexxf3zsn17ktm8eg08m7g.htm#p1ex6l34sfi4tkn1ez0pc9scc86w 
-   2.  https://go.documentation.sas.com/doc/en/espcdc/6.2/espcreatewindows/p06okn6w7xztman1ty3ihlhoblbi.htm#p0juqnqfz3bycvn1i56hn4fn1elo .  
-5. The following join windows have a memory leak because the left and right side of the join is a pi_EMPTY window
-6. Turn off pubsub on windows with stateful index and output-insert-only="true".  Python code leaking memory, switch to functional window to parse JSON.
-7. Transpose window group-by value must be bounded. The transpose window was using id, which is a constantly increasing value.
-8.  a functional window receiving update blocks.  The window will leak the event block as it processes the event.  Organize the model so that the functional window does not receive update blocks.
-9.  Code pi_EMPTY for filter window
-
-
-### 3.  mqtt 
-
----
-# Documentation
-https://www.cyberciti.biz/faq/howto-setting-rhel7-centos-7-static-ip-configuration/   
-https://www.tecmint.com/install-kubernetes-cluster-on-centos-7/  
-https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos   
-https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/   
-https://docs.docker.com/registry/deploying/  
-https://github.com/sassoftware/esp-kubernetes  
-https://kubernetes.io/docs/reference/kubectl/cheatsheet/  
-https://repulpmaster.unx.sas.com/v2/cdp-release-x64_oci_linux_2-docker-latest/
+## ssl esp server
+## add mqtt
 
 ---
 
@@ -1019,7 +1017,7 @@ sudo -s
 sudo chown bas:bas deploy    
 tar -xvzf mirrormgr-linux.tgz  
 ```
-* for repairing linefeeds to linux style  
+- for repairing linefeeds to linux style  
 ```
 sed -i -e 's/\r$//' studio.sh  
 ```
@@ -1043,7 +1041,7 @@ $ sudo snap start docker
 
 ---
 
-# 5. At startup of raspberry PI (this is now automated)
+# At startup of raspberry PI (this is now automated)
 
 sudo systemctl stop serial-getty@ttyS0  
 sudo systemctl disable serial-getty@ttyS0  
@@ -1052,10 +1050,54 @@ sudo chmod a+rw /dev/ttyS0
 sudo stty -F /dev/ttyS0 9600 cs8 -cstopb -parenb 
 stty -F /dev/ttyUSB0 raw 115200 evenp
 
-### 5.1. list settings
+\# list settings
 stty -F /dev/ttyUSB0 --all
 
 cd docker
 ./esp.sh restart
 
-[def]: #13--open-from-outside-network
+
+---
+
+# TIPS 
+## 1. Linux
+```
+sudo -s
+sudo chown bas:bas deploy    
+tar -xvzf mirrormgr-linux.tgz  
+```
+- for repairing linefeeds to linux style  
+```
+sed -i -e 's/\r$//' studio.sh  
+```
+## 2. docker
+- for all images also stopped  
+```
+docker ps -a  
+remove image  
+docker rm studio  
+```
+- version ubuntu  
+```
+lsb_release -a  
+scp [OPTION] [user@]SRC_HOST:]file1 [user@]DEST_HOST:]file2  
+```
+
+- when you get deamon not started!
+```
+$ sudo snap start docker
+```
+---
+
+
+
+---
+# Documentation
+https://www.cyberciti.biz/faq/howto-setting-rhel7-centos-7-static-ip-configuration/   
+https://www.tecmint.com/install-kubernetes-cluster-on-centos-7/  
+https://phoenixnap.com/kb/how-to-install-kubernetes-on-centos   
+https://deliciousbrains.com/ssl-certificate-authority-for-local-https-development/   
+https://docs.docker.com/registry/deploying/  
+https://github.com/sassoftware/esp-kubernetes  
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/  
+https://repulpmaster.unx.sas.com/v2/cdp-release-x64_oci_linux_2-docker-latest/
